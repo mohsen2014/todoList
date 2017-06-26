@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import LoginForm from '../components/LoginForm.jsx';
+import Auth from '../modules/Auth';
 import $ from 'jquery';
+import { browserHistory, Router } from 'react-router';
 
 class LoginPage extends React.Component {
 
@@ -44,8 +46,9 @@ class LoginPage extends React.Component {
       data: formData,
       dataType: 'JSON'
     }).done(
-      function(data){
-        alert("Valid !");
+      function(data){console.log(data);
+        Auth.authenticateUser(data.token);
+        browserHistory.push('/');
       }
     ).fail(
       function(res){
@@ -57,35 +60,6 @@ class LoginPage extends React.Component {
         });
       }
     )
-
-    // create an AJAX request
-    // const xhr = new XMLHttpRequest();
-    // xhr.open('post', '/auth/login');
-    // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    // xhr.responseType = 'json';
-    // xhr.addEventListener('load', () => {
-    //   if (xhr.status === 200) {
-    //     // success
-
-    //     // change the component-container state
-    //     this.setState({
-    //       errors: {}
-    //     });
-
-    //     console.log('The form is valid');
-    //   } else {
-    //     // failure
-
-    //     // change the component state
-    //     const errors = xhr.response.errors ? xhr.response.errors : {};
-    //     errors.summary = xhr.response.message;
-
-    //     this.setState({
-    //       errors
-    //     });
-    //   }
-    // });
-    // xhr.send(formData);
   }
 
   /**

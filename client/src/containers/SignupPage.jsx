@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import SignUpForm from '../components/SignupForm.jsx';
 import $ from 'jquery';
+import { browserHistory, Router } from 'react-router';
 
 class SignUpPage extends React.Component {
 
@@ -62,7 +63,9 @@ class SignUpPage extends React.Component {
       dataType: 'JSON'
     }).done(
       function(data){
-        
+
+        localStorage.setItem('successMessage', "Registration Seccessful");
+        browserHistory.push('/login');
       }
     ).fail(
       function(res){

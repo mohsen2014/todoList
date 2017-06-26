@@ -1,7 +1,10 @@
 const express = require('express'),
   bodyParser = require('body-parser'),
   passport = require('passport'),
-  config = require('./config');
+  config = require('./config'),
+  path = require('path');
+
+require('./server/models').connect(config.dbUri);
 
 const app = express();
 // tell the app to look for static files in these directories
