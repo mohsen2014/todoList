@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "TLDB"
+  },
+  "AccessToken": {
+    "dataSource": "TLDB",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "TLDB",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "TLDB",
+    "public": false,
+    "options": {
+      "strictObjectIDCoercion": true
+    }
+  },
+  "Role": {
+    "dataSource": "TLDB",
+    "public": false
+  },
+  "test": {
+    "dataSource": "TLDB",
+    "public": true
+  }
+}
