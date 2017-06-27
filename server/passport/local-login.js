@@ -29,6 +29,13 @@ module.exports = new PassportLocalStrategy({
       return done(error);
     }
 
+    if(user.state === 'deactive'){
+      const error = new Error('this user is Inactive , please check your email');
+      error.name = 'InactiveUser';
+
+      return done(error);
+    }
+
     // check if a hashed user's password is equal to a value saved in the database
     return user.comparePassword(userData.password, (passwordErr, isMatch) => {
       if (err) { return done(err); }

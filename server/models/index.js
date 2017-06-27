@@ -13,4 +13,6 @@ module.exports.connect = (uri) => {
 
   // load models
   require('./user');
+  require('./token');
+
 };
