@@ -9,7 +9,10 @@ const TodoListsForm = ({
   onSubmit,
   onChange,
   errors,
-	todoList
+	todoList,
+	RepeatTodo,
+	list,
+	listLoaded
 }) => (
   <div className="row">
 		<div className="col-sm-4">
@@ -34,10 +37,19 @@ const TodoListsForm = ({
 						/>
 					</div>
 					<div className="button-line">
-						<RaisedButton type="submit" label="Add TODO" primary />
+							<RaisedButton type="submit" label="Add TODO" primary />
 					</div>
 				</div>
 			</form>
+		</div>
+		<div className="col-sm-8">
+			{listLoaded ? (
+				<RepeatTodo items={list}></RepeatTodo>
+			):(
+				<span>
+				Empty List
+				</span>
+			)}
 		</div>
 	</div>
 );
