@@ -1,25 +1,12 @@
-// let mongoose = require('mongoose');
-// console.log("token");
-// // define the User model schema
-// const TokenSchema = new mongoose.Schema({
-//   userId: Number,
-//   token: String
-// });
-
-
-// exports.Token = mongoose.model('Token', TokenSchema);
-
-
-
-const mongoose = require('mongoose'),
-uuid = require('node-uuid');
+const mongoose = require('mongoose');
+    // uuid = require('node-uuid');
 
 
 // Verification token model
 const verificationTokenSchema = new mongoose.Schema({
-    _userId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
-    token: {type: String, required: true},
-    createdAt: {type: Date, required: true, default: Date.now, expires: '4h'}
+  _userId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
+  token: {type: String, required: true},
+  createdAt: {type: Date, required: true, default: Date.now, expires: '4h'}
 });
 
 

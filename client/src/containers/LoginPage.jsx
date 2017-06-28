@@ -46,8 +46,10 @@ class LoginPage extends React.Component {
       data: formData,
       dataType: 'JSON'
     }).done(
-      function(data){console.log(data);
+      function(data){
         Auth.authenticateUser(data.token);
+        localStorage.setItem('username' ,data.user.name)
+        localStorage.setItem('userid' ,data.user.id);
         browserHistory.push('/');
       }
     ).fail(

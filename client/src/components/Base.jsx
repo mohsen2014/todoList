@@ -7,14 +7,22 @@ const Base = ({ children }) => (
     <nav className="navbar navbar-default">
       <div className="container-fluid">
         <div className="navbar-header">
-          <a className="navbar-brand" href="/">
-            Todo List
-          </a>
+          <div className="navbar-brand" >
+            <a href='/'> Todo List </a>
+            {Auth.isUserAuthenticated() ? (
+              <span>
+              <span><strong>welcome </strong></span>
+                {localStorage.getItem('username') ? localStorage.getItem('username') : ''}
+              </span>
+            ):(<span></span>)}
+          </div>
         </div>
         <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           {Auth.isUserAuthenticated() ? (
             <ul className="nav navbar-nav navbar-right">
-              <li ><Link to="/logout">Log out</Link></li>              
+              <li ><Link to="/logout">Log out</Link></li>
+              <li ><Link to="/todo">Todo List</Link></li>                            
+              <li ><Link to="/">Dashboard</Link></li>
           </ul>            
             ) : (
             <ul  className="nav navbar-nav navbar-right">

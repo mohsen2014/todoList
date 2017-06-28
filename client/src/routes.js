@@ -3,6 +3,7 @@ import HomePage from './components/HomePage.jsx';
 import DashboardPage from './containers/DashboardPage.jsx';
 import LoginPage from './containers/LoginPage.jsx';
 import SignUpPage from './containers/SignupPage.jsx';
+import todoListPage from './containers/TodoListPage.jsx';
 import Auth from './modules/Auth';
 
 
@@ -40,6 +41,10 @@ const routes = {
         // change the current URL to /
         replace('/');
       }
+    },
+    {
+      path: '/todo',
+      components: todoListPage
     }
   ]
 };

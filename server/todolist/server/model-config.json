@@ -38,5 +38,9 @@
   "test": {
     "dataSource": "TLDB",
     "public": true
+  },
+  "todoLists": {
+    "dataSource": "TLDB",
+    "public": true
   }
 }

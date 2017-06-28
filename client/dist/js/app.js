@@ -35293,6 +35293,10 @@
 
 	var _SignupPage2 = _interopRequireDefault(_SignupPage);
 
+	var _TodoListPage = __webpack_require__(476);
+
+	var _TodoListPage2 = _interopRequireDefault(_TodoListPage);
+
 	var _Auth = __webpack_require__(399);
 
 	var _Auth2 = _interopRequireDefault(_Auth);
@@ -35327,6 +35331,9 @@
 	      // change the current URL to /
 	      replace('/');
 	    }
+	  }, {
+	    path: '/todo',
+	    components: _TodoListPage2.default
 	  }]
 	};
 
@@ -35369,9 +35376,27 @@
 	          'div',
 	          { className: 'navbar-header' },
 	          _react2.default.createElement(
-	            'a',
-	            { className: 'navbar-brand', href: '/' },
-	            'Todo List'
+	            'div',
+	            { className: 'navbar-brand' },
+	            _react2.default.createElement(
+	              'a',
+	              { href: '/' },
+	              ' Todo List '
+	            ),
+	            _Auth2.default.isUserAuthenticated() ? _react2.default.createElement(
+	              'span',
+	              null,
+	              _react2.default.createElement(
+	                'span',
+	                null,
+	                _react2.default.createElement(
+	                  'strong',
+	                  null,
+	                  'welcome '
+	                )
+	              ),
+	              localStorage.getItem('username') ? localStorage.getItem('username') : ''
+	            ) : _react2.default.createElement('span', null)
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -35387,6 +35412,24 @@
 	                _reactRouter.Link,
 	                { to: '/logout' },
 	                'Log out'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/todo' },
+	                'Todo List'
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              null,
+	              _react2.default.createElement(
+	                _reactRouter.Link,
+	                { to: '/' },
+	                'Dashboard'
 	              )
 	            )
 	          ) : _react2.default.createElement(
@@ -41222,11 +41265,14 @@
 	    value: function componentDidMount() {
 	      var self = this;
 	      _jquery2.default.ajax({
-	        method: 'get',
+	        method: 'post',
 	        url: '/api/dashbord',
-	        data: formData,
-	        dataType: 'JSON'
-	      }).success(function (data) {
+	        dataType: 'json',
+	        beforeSend: function beforeSend(xhr) {
+	          xhr.setRequestHeader('Authorization', 'bearer ' + _Auth2.default.getToken());
+	          xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	        }
+	      }).done(function (data) {
 	        self.setState({
 	          secretData: data.response.message
 	        });
@@ -51651,8 +51697,9 @@
 	        data: formData,
 	        dataType: 'JSON'
 	      }).done(function (data) {
-	        console.log(data);
 	        _Auth2.default.authenticateUser(data.token);
+	        localStorage.setItem('username', data.user.name);
+	        localStorage.setItem('userid', data.user.id);
 	        _reactRouter.browserHistory.push('/');
 	      }).fail(function (res) {
 	        var errors = res.responseJSON.errors ? res.responseJSON.errors : {};
@@ -54071,6 +54118,234 @@
 	};
 
 	exports.default = SignUpForm;
+
+/***/ }),
+/* 476 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _TodoListsForm = __webpack_require__(477);
+
+	var _TodoListsForm2 = _interopRequireDefault(_TodoListsForm);
+
+	var _Auth = __webpack_require__(399);
+
+	var _Auth2 = _interopRequireDefault(_Auth);
+
+	var _jquery = __webpack_require__(460);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _reactRouter = __webpack_require__(340);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var TodoListPage = function (_React$Component) {
+	  _inherits(TodoListPage, _React$Component);
+
+	  /**
+	   * Class constructor.
+	   */
+	  function TodoListPage(props) {
+	    _classCallCheck(this, TodoListPage);
+
+	    // set the initial component state
+	    var _this = _possibleConstructorReturn(this, (TodoListPage.__proto__ || Object.getPrototypeOf(TodoListPage)).call(this, props));
+
+	    _this.state = {
+	      errors: {},
+	      todo: {
+	        title: '',
+	        description: '',
+	        userId: ''
+	      }
+	    };
+
+	    _this.processForm = _this.processForm.bind(_this);
+	    _this.changeList = _this.changeList.bind(_this);
+	    return _this;
+	  }
+
+	  /**
+	   * Process the form.
+	   *
+	   * @param {object} event - the JavaScript event object
+	   */
+
+
+	  _createClass(TodoListPage, [{
+	    key: 'processForm',
+	    value: function processForm(event) {
+	      var self = this;
+	      // prevent default action. in this case, action is the form submission event
+	      event.preventDefault();
+
+	      // // create a string for an HTTP body message
+	      var userId = encodeURIComponent(localStorage.getItem('userid'));
+	      var title = encodeURIComponent(this.state.todo.title);
+	      var description = encodeURIComponent(this.state.todo.description);
+	      var formData = 'userid=' + userId + '&title=' + title + '&description=' + description;
+	      console.log(formData);
+	      _jquery2.default.ajax({
+	        method: 'post',
+	        url: 'http://0.0.0.0:3000/api/todoLists',
+	        data: {
+	          "userId": userId,
+	          "title": title,
+	          "description": description
+	        },
+	        dataType: 'JSON'
+	      }).done(function (data) {
+	        console.log(data);
+	      }).fail(function (res) {
+	        console.log(err);
+	      });
+	    }
+
+	    /**
+	     * Change the todoList object.
+	     *
+	     * @param {object} event - the JavaScript event object
+	     */
+
+	  }, {
+	    key: 'changeList',
+	    value: function changeList(event) {
+	      console.log(event.target.name);
+	      console.log(event.target.value);
+
+	      var field = event.target.name;
+	      var todo = this.state.todo;
+	      todo[field] = event.target.value;
+
+	      this.setState({
+	        todo: todo
+	      });
+	    }
+	    /**
+	     * Render the component.
+	     */
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(_TodoListsForm2.default, {
+	        onSubmit: this.processForm,
+	        onChange: this.changeList,
+	        errors: this.state.errors,
+	        todoList: this.state.todo
+	      });
+	    }
+	  }]);
+
+	  return TodoListPage;
+	}(_react2.default.Component);
+
+	exports.default = TodoListPage;
+
+/***/ }),
+/* 477 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(340);
+
+	var _Card = __webpack_require__(401);
+
+	var _RaisedButton = __webpack_require__(463);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+	var _TextField = __webpack_require__(465);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TodoListsForm = function TodoListsForm(_ref) {
+		var onSubmit = _ref.onSubmit,
+		    onChange = _ref.onChange,
+		    errors = _ref.errors,
+		    todoList = _ref.todoList;
+		return _react2.default.createElement(
+			'div',
+			{ className: 'row' },
+			_react2.default.createElement(
+				'div',
+				{ className: 'col-sm-4' },
+				_react2.default.createElement(
+					'form',
+					{ onSubmit: onSubmit },
+					_react2.default.createElement(
+						'div',
+						{ className: 'form-group ' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'field-line' },
+							_react2.default.createElement(_TextField2.default, {
+								floatingLabelText: 'Title',
+								name: 'title',
+								errorText: errors.title,
+								onChange: onChange,
+								value: todoList.title
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'field-line' },
+							_react2.default.createElement(_TextField2.default, {
+								floatingLabelText: 'description',
+								name: 'description',
+								errorText: errors.description,
+								onChange: onChange,
+								value: todoList.description
+							})
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'button-line' },
+							_react2.default.createElement(_RaisedButton2.default, { type: 'submit', label: 'Add TODO', primary: true })
+						)
+					)
+				)
+			)
+		);
+	};
+
+	TodoListsForm.propTypes = {
+		onSubmit: _react.PropTypes.func.isRequired,
+		onChange: _react.PropTypes.func.isRequired,
+		errors: _react.PropTypes.object.isRequired,
+		todoList: _react.PropTypes.object.isRequired
+	};
+
+	exports.default = TodoListsForm;
 
 /***/ })
 /******/ ]);

@@ -30,7 +30,7 @@ module.exports = new PassportLocalStrategy({
     }
 
     if(user.state === 'deactive'){
-      const error = new Error('this user is Inactive , please check your email');
+      const error = new Error('Please activate your account to start using our services!');
       error.name = 'InactiveUser';
 
       return done(error);
@@ -54,7 +54,8 @@ module.exports = new PassportLocalStrategy({
       // create a token string
       const token = jwt.sign(payload, config.jwtSecret);
       const data = {
-        name: user.name
+        name: user.name,
+        id: user._id
       };
 
       return done(null, token, data);

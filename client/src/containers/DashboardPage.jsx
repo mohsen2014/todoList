@@ -22,11 +22,14 @@ class DashboardPage extends React.Component {
   componentDidMount() {
     let self = this;
     $.ajax({
-      method: 'get',
+      method: 'post',
       url: '/api/dashbord',
-      data: formData,
-      dataType: 'JSON'
-    }).success(
+      dataType: 'json',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', `bearer ${Auth.getToken()}`);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+      }
+    }).done(
       function(data){
         self.setState({
           secretData: data.response.message
